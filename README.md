@@ -19,6 +19,13 @@ and compiled by:
 cmake --build build
 ```
 
+### Installation
+The project can be installed by running the install command:
+```
+cmake --install build
+```
+Note: elevated privileges may be required for installation.
+
 ## Authors
 * Max Hallgarten La Casta (m.hallgarten-la-casta21@imperial.ac.uk)
 
