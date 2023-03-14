@@ -71,9 +71,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${SOFA_HEADER_FI
 # Compile test
 add_executable(${PROJECT_NAME}_test ${SOFA_SOURCE_DIRECTORY}/t_sofa_c.c)
 if(MSVC)
-    target_link_libraries(${PROJECT_NAME}_test PRIVATE sofa)
+    target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME})
 else()
-    target_link_libraries(${PROJECT_NAME}_test PRIVATE sofa m)
+    target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME} m)
 endif()
 
 # Create and install the configuration files
