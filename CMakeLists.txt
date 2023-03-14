@@ -15,7 +15,7 @@ set(SOFA_HEADER_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Set installation directories
 include(GNUInstallDirs)
-set(SOFA_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}")
+set(SOFA_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}")
 set(SOFA_RUNTIME_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
 set(SOFA_LIBRARY_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
 set(SOFA_ARCHIVE_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
@@ -58,26 +58,53 @@ file(GLOB_RECURSE SOFA_HEADER_FILES ${SOFA_HEADER_DIRECTORY}/*.h)
 set_source_files_properties(${SOFA_SOURCE_FILES} PROPERTIES COMPILE_FLAGS "-pedantic -Wall -O")
 
 # Compile SOFA
-add_library(sofa ${SOFA_SOURCE_FILES} ${SOFA_HEADER_FILES})
-target_include_directories(sofa PUBLIC $<BUILD_INTERFACE:${SOFA_HEADER_DIRECTORY}>
-                                       $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-                                       $<INSTALL_INTERFACE:${SOFA_INCLUDE_INSTALL_DIR}>
-                                PRIVATE ${SOFA_HEADER_DIRECTORY}
+add_library(${PROJECT_NAME} ${SOFA_SOURCE_FILES} ${SOFA_HEADER_FILES})
+target_include_directories(${PROJECT_NAME}
+    PUBLIC $<BUILD_INTERFACE:${SOFA_HEADER_DIRECTORY}>
+           $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+           $<INSTALL_INTERFACE:${SOFA_INCLUDE_INSTALL_DIR}>
+    PRIVATE ${SOFA_HEADER_DIRECTORY}
 )
-set_target_properties(sofa PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${SOFA_HEADER_FILES}")
 
 # Compile test
-add_executable(sofa_test ${SOFA_SOURCE_DIRECTORY}/t_sofa_c.c)
+add_executable(${PROJECT_NAME}_test ${SOFA_SOURCE_DIRECTORY}/t_sofa_c.c)
 if(MSVC)
-    target_link_libraries(sofa_test PRIVATE sofa)
+    target_link_libraries(${PROJECT_NAME}_test PRIVATE sofa)
 else()
-    target_link_libraries(sofa_test PRIVATE sofa m)
+    target_link_libraries(${PROJECT_NAME}_test PRIVATE sofa m)
 endif()
 
-# Install SOFA
-install(TARGETS sofa
-        RUNTIME DESTINATION ${SOFA_RUNTIME_INSTALL_DIR}
-        LIBRARY DESTINATION ${SOFA_LIBRARY_INSTALL_DIR}
-        ARCHIVE DESTINATION ${SOFA_ARCHIVE_INSTALL_DIR}
+# Create and install the configuration files
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file("${PROJECT_NAME}ConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
 )
-install(FILES ${SOFA_HEADER_FILES} DESTINATION ${SOFA_INCLUDE_INSTALL_DIR})
+configure_package_config_file(
+    "${PROJECT_SOURCE_DIR}/cmake/config.cmake.in"
+    "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/${PROJECT_NAME}
+    PATH_VARS CMAKE_INSTALL_INCLUDEDIR
+)
+install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+    "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/${PROJECT_NAME}
+)
+
+# Install SOFA
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}Targets
+    RUNTIME DESTINATION ${SOFA_RUNTIME_INSTALL_DIR}
+    LIBRARY DESTINATION ${SOFA_LIBRARY_INSTALL_DIR}
+    ARCHIVE DESTINATION ${SOFA_ARCHIVE_INSTALL_DIR}
+    PUBLIC_HEADER DESTINATION ${SOFA_INCLUDE_INSTALL_DIR}
+)
+
+# Install SOFA targets
+install(EXPORT ${PROJECT_NAME}Targets
+    FILE ${PROJECT_NAME}Targets.cmake
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/${PROJECT_NAME}
+)
