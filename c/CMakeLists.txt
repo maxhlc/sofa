@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 # Declare project
-project(sofa LANGUAGES C VERSION 20210512)
+project(sofa-c LANGUAGES C VERSION 20210512)
 
 # Set output directories
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
@@ -37,14 +37,14 @@ set(FETCHCONTENT_QUIET FALSE)
 
 # Download source code
 FetchContent_Declare(
-    sofa
+    ${PROJECT_NAME}
     URL ${SOFA_URL}
 )
-FetchContent_MakeAvailable(sofa)
+FetchContent_MakeAvailable(${PROJECT_NAME})
 
 # Glob source and header files
-file(GLOB_RECURSE SOFA_FETCH_SOURCE_FILES ${sofa_SOURCE_DIR}/20210512/c/src/*.c)
-file(GLOB_RECURSE SOFA_FETCH_HEADER_FILES ${sofa_SOURCE_DIR}/20210512/c/src/*.h)
+file(GLOB_RECURSE SOFA_FETCH_SOURCE_FILES ${${PROJECT_NAME}_SOURCE_DIR}/20210512/c/src/*.c)
+file(GLOB_RECURSE SOFA_FETCH_HEADER_FILES ${${PROJECT_NAME}_SOURCE_DIR}/20210512/c/src/*.h)
 
 # Copy source and header files
 file(COPY ${SOFA_FETCH_SOURCE_FILES} DESTINATION ${SOFA_SOURCE_DIRECTORY})
@@ -55,7 +55,11 @@ file(GLOB_RECURSE SOFA_SOURCE_FILES ${SOFA_SOURCE_DIRECTORY}/*.c)
 file(GLOB_RECURSE SOFA_HEADER_FILES ${SOFA_HEADER_DIRECTORY}/*.h)
 
 # Set compiler flags
-set_source_files_properties(${SOFA_SOURCE_FILES} PROPERTIES COMPILE_FLAGS "-pedantic -Wall -O")
+set(CMAKE_C_FLAGS                "-pedantic -Wall -O")
+set(CMAKE_C_FLAGS_DEBUG          "")
+set(CMAKE_C_FLAGS_RELEASE        "")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_Fortran_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_RELEASE}")
+set(CMAKE_C_FLAGS_MINSIZEREL     "")
 
 # Compile SOFA
 add_library(${PROJECT_NAME} ${SOFA_SOURCE_FILES} ${SOFA_HEADER_FILES})
