@@ -1,0 +1,11 @@
+# Binaries directory
+bin
+
+# Header directory
+include
+
+# Library directory
+lib
+
+# Source directory
+src

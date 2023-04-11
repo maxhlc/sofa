@@ -1,13 +1,14 @@
 # SOFA
-Unofficial repository for the ANSI C version of the [Standards of Fundamental Astronomy (SOFA)](https://www.iausofa.org/index.html) library.
+Unofficial repository for the ANSI C and Fortran versions of the [Standards of Fundamental Astronomy (SOFA)](https://www.iausofa.org/index.html) library.
 
-The CMake configuration automatically downloads the SOFA source from the official website and compiles the library.
+The CMake configuration automatically downloads the SOFA sources from the official website and compiles the libraries.
 
 ## Getting Started
 
 ### Dependencies
 * CMake
 * gcc
+* gfortran
 
 ### Compilation
 The project can be configured by:
