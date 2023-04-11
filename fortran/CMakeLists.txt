@@ -9,6 +9,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
+# Set download name
+set(SOFA_DOWNLOAD ${PROJECT_NAME}-download)
+
 # Set source and header file directories
 set(SOFA_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
@@ -35,13 +38,13 @@ set(FETCHCONTENT_QUIET FALSE)
 
 # Download source code
 FetchContent_Declare(
-    ${PROJECT_NAME}
+    ${SOFA_DOWNLOAD}
     URL ${SOFA_URL}
 )
-FetchContent_MakeAvailable(${PROJECT_NAME})
+FetchContent_MakeAvailable(${SOFA_DOWNLOAD})
 
 # Glob source and header files
-file(GLOB_RECURSE SOFA_FETCH_SOURCE_FILES ${${PROJECT_NAME}_SOURCE_DIR}/20210512/f77/src/*.for)
+file(GLOB_RECURSE SOFA_FETCH_SOURCE_FILES ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20210512/f77/src/*.for)
 
 # Copy source files
 file(COPY ${SOFA_FETCH_SOURCE_FILES} DESTINATION ${SOFA_SOURCE_DIRECTORY})
