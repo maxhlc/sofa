@@ -12,8 +12,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 # Set download name
 set(SOFA_DOWNLOAD ${PROJECT_NAME}-download)
 
-# Set source and header file directories
-set(SOFA_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src)
+# Set header file directories
 set(SOFA_HEADER_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Set installation directories
@@ -45,16 +44,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(${SOFA_DOWNLOAD})
 
-# Glob source and header files
+# Set source file variables
 file(GLOB_RECURSE SOFA_FETCH_SOURCE_FILES ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20210512/c/src/*.c)
+set(SOFA_SOURCE_FILES ${SOFA_FETCH_SOURCE_FILES})
+set(SOFA_TEST_FILE ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20210512/c/src/t_sofa_c.c)
+
+# Set header file variables (header files copied to avoid including source files)
 file(GLOB_RECURSE SOFA_FETCH_HEADER_FILES ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20210512/c/src/*.h)
-
-# Copy source and header files
-file(COPY ${SOFA_FETCH_SOURCE_FILES} DESTINATION ${SOFA_SOURCE_DIRECTORY})
 file(COPY ${SOFA_FETCH_HEADER_FILES} DESTINATION ${SOFA_HEADER_DIRECTORY})
-
-# Glob source and header files
-file(GLOB_RECURSE SOFA_SOURCE_FILES ${SOFA_SOURCE_DIRECTORY}/*.c)
 file(GLOB_RECURSE SOFA_HEADER_FILES ${SOFA_HEADER_DIRECTORY}/*.h)
 
 # Set compiler flags
@@ -76,7 +73,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${SOFA_HEADER_FILES}")
 
 # Compile test
-add_executable(${PROJECT_NAME}_test ${SOFA_SOURCE_DIRECTORY}/t_sofa_c.c)
+add_executable(${PROJECT_NAME}_test ${SOFA_TEST_FILE})
 if(MSVC)
     target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME})
 else()

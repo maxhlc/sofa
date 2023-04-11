@@ -43,14 +43,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(${SOFA_DOWNLOAD})
 
-# Glob source and header files
+# Set source file variables
 file(GLOB_RECURSE SOFA_FETCH_SOURCE_FILES ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20210512/f77/src/*.for)
-
-# Copy source files
-file(COPY ${SOFA_FETCH_SOURCE_FILES} DESTINATION ${SOFA_SOURCE_DIRECTORY})
-
-# Glob source files
-file(GLOB_RECURSE SOFA_SOURCE_FILES ${SOFA_SOURCE_DIRECTORY}/*.for)
+set(SOFA_SOURCE_FILES ${SOFA_FETCH_SOURCE_FILES})
+set(SOFA_TEST_FILE ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20210512/f77/src/t_sofa_f.for)
 
 # Set compiler flags
 set(CMAKE_Fortran_FLAGS                "-O -Wall")
@@ -64,7 +60,7 @@ add_library(${PROJECT_NAME} ${SOFA_SOURCE_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # Compile test
-add_executable(${PROJECT_NAME}_test ${SOFA_SOURCE_DIRECTORY}/t_sofa_f.for)
+add_executable(${PROJECT_NAME}_test ${SOFA_TEST_FILE})
 if(MSVC)
     target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME})
 else()
