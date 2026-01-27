@@ -25,10 +25,10 @@ set(SOFA_ARCHIVE_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
 # Set SOFA URL based on operating system
 if(UNIX)
     # Version with UNIX line terminations
-    set(SOFA_URL http://www.iausofa.org/2021_0512_C/sofa_c-20210512.tar.gz)
+    set(SOFA_URL https://www.iausofa.org/s/sofa_c-20231011tar.gz)
 elseif(WIN32)
     # Version with DOS line terminations
-    set(SOFA_URL https://www.iausofa.org/2021_0512_C/sofa_c-20210512.zip)
+    set(SOFA_URL https://www.iausofa.org/s/sofa_c-20231011.zip)
 endif()
 
 # Add module to download source code
@@ -45,12 +45,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(${SOFA_DOWNLOAD})
 
 # Set source file variables
-file(GLOB_RECURSE SOFA_FETCH_SOURCE_FILES ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20210512/c/src/*.c)
+file(GLOB_RECURSE SOFA_FETCH_SOURCE_FILES ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20231011/c/src/*.c)
 set(SOFA_SOURCE_FILES ${SOFA_FETCH_SOURCE_FILES})
-set(SOFA_TEST_FILE ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20210512/c/src/t_sofa_c.c)
+set(SOFA_TEST_FILE ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20231011/c/src/t_sofa_c.c)
 
 # Set header file variables (header files copied to avoid including source files)
-file(GLOB_RECURSE SOFA_FETCH_HEADER_FILES ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20210512/c/src/*.h)
+file(GLOB_RECURSE SOFA_FETCH_HEADER_FILES ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20231011/c/src/*.h)
 file(COPY ${SOFA_FETCH_HEADER_FILES} DESTINATION ${SOFA_HEADER_DIRECTORY})
 file(GLOB_RECURSE SOFA_HEADER_FILES ${SOFA_HEADER_DIRECTORY}/*.h)
 

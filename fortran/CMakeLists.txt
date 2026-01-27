@@ -24,10 +24,10 @@ set(SOFA_ARCHIVE_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
 # Set SOFA URL based on operating system
 if(UNIX)
     # Version with UNIX line terminations
-    set(SOFA_URL http://www.iausofa.org/2021_0512_F/sofa_f-20210512.tar.gz)
+    set(SOFA_URL https://www.iausofa.org/s/sofa_f-20231011tar.gz)
 elseif(WIN32)
     # Version with DOS line terminations
-    set(SOFA_URL https://www.iausofa.org/2021_0512_F/sofa_f-20210512.zip)
+    set(SOFA_URL https://www.iausofa.org/s/sofa_f-20231011.zip)
 endif()
 
 # Add module to download source code
@@ -44,9 +44,9 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(${SOFA_DOWNLOAD})
 
 # Set source file variables
-file(GLOB_RECURSE SOFA_FETCH_SOURCE_FILES ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20210512/f77/src/*.for)
+file(GLOB_RECURSE SOFA_FETCH_SOURCE_FILES ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20231011/f77/src/*.for)
 set(SOFA_SOURCE_FILES ${SOFA_FETCH_SOURCE_FILES})
-set(SOFA_TEST_FILE ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20210512/f77/src/t_sofa_f.for)
+set(SOFA_TEST_FILE ${${SOFA_DOWNLOAD}_SOURCE_DIR}/20231011/f77/src/t_sofa_f.for)
 
 # Set compiler flags
 set(CMAKE_Fortran_FLAGS                "-O -Wall")
